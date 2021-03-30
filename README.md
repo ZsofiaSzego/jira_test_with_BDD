@@ -5,4 +5,4 @@ You need to change 'valid' to an actual existing jira username and password in l
 You also have to change 'password' to the actual password in StepDefinitions - UserIsLoggedIn method.
 
 Information
-This is a Java project with Cucumber, therefore uses Gherkin's Given-When-Then syntax in the StepDefinitions.# jira_test_with_BDD
+This is a Java project with Cucumber, therefore uses Gherkin's Given-When-Then syntax in the StepDefinitions - jira_test_with_BDD

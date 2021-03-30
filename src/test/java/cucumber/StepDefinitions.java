@@ -12,6 +12,7 @@ public class StepDefinitions {
     DashboardPage dashBoardPage;
     MainPage mainPage;
     LogInpage logInpage;
+    LogOutPage logOutPage;
 
     @Given("the user is on the {string} page.")
     public void UserIsOnPage(String url) {
@@ -52,6 +53,37 @@ public class StepDefinitions {
                 Assertions.assertTrue(dashBoardPage.isUnsuccessfulLogIn());
                 break;
         }
+        util.tearDown();
+    }
+
+    @Given("the user is logged in as {string}.")
+    public void UserIsLoggedIn(String user){
+        util = new Util();
+        util.setUp("https://jira-auto.codecool.metastage.net/");
+        dashBoardPage = new DashboardPage(util.getDriver());
+        dashBoardPage.login(user, "password");
+        mainPage = new MainPage(util.getDriver());
+        util.waitForElement(mainPage.getAvatar());
+    }
+
+    @When("the user clicks on they avatar and log out.")
+    public void ClicksOnAvatar() {
+        mainPage.clickAvatar();
+        util.waitForElement(mainPage.getLogoutTab());
+        mainPage.clickLogOutTab();
+    }
+
+    @Then("they can see a log out message.")
+    public void CanSeeALogOutMessage(){
+        logOutPage = new LogOutPage(util.getDriver());
+        Assertions.assertTrue(logOutPage.isErrorMessageDisplayed());
+    }
+
+    @Then("they can not access they profile page.")
+    public void canNotAccessProfilePage(){
+        mainPage.navigateToProfile();
+        util.waitForElement(mainPage.getAccessErrorMessage());
+        Assertions.assertTrue(mainPage.isAccessErrorDisplayed());
         util.tearDown();
     }
 

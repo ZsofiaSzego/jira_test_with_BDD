@@ -13,6 +13,9 @@ public class StepDefinitions {
     MainPage mainPage;
     LogInpage logInpage;
     LogOutPage logOutPage;
+    CreateIssuePage createIssuePage;
+    EditIssuePage editIssuePage;
+    IssuePage issuePage;
 
     @Given("the user is on the {string} page.")
     public void UserIsOnPage(String url) {
@@ -85,6 +88,32 @@ public class StepDefinitions {
         util.waitForElement(mainPage.getAccessErrorMessage());
         Assertions.assertTrue(mainPage.isAccessErrorDisplayed());
         util.tearDown();
+    }
+
+    @And("an issue with {string} as summary {string} as type is exist in project {string}.")
+    public void anIssueIsExistInProject(String summary, String type, String project) {
+        issuePage = new IssuePage(util.getDriver());
+        issuePage.navigateToProject(project);
+        createIssuePage = new CreateIssuePage(util.getDriver());
+        util.waitForElement(createIssuePage.getCreateButton());
+        createIssuePage.createIssue(type, summary);
+        util.refresh();
+        issuePage.navigateToLastCreatedIssue();
+    }
+
+    @When("change issue summary to {string}.")
+    public void changeIssueSummaryTo(String newSummary) {
+        issuePage.clickOnEditIssue();
+        editIssuePage = new EditIssuePage(util.getDriver());
+        util.waitForElement(editIssuePage.getSummaryField());
+        editIssuePage.editSummaryField(newSummary);
+        util.refresh();
+    }
+
+    @Then("issue has {string} in summary.")
+    public void issueHasInSummary(String newSummary) {
+        Assertions.assertEquals(newSummary, issuePage.getSummaryVal());
+        issuePage.deleteCreatedIssue();
     }
 
 }
